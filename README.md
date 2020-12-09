@@ -22,10 +22,12 @@ $client = new \Avido\Smtpeter\Client($apiKey);
 ### Templates
 
 #### List all templates
+Templates list results can be limit with an `offset` and `limit` variable 
 ```php
 $templates = $client->templates->list();
-
+$templatesWithLimit = $client->templates->list($offset, $limit);
 ```
+
 #### Retrieve specific template
 ```php
 $template = $client->template->get($id);

@@ -1,6 +1,7 @@
 <?php
 namespace Avido\Smtpeter;
 
+use Avido\Smtpeter\Endpoints\Templates;
 use Avido\Smtpeter\Exceptions\SmtpeterException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
@@ -11,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
-    const API_ENDPOINT = 'https://api.copernica.com/v1';
+    const API_ENDPOINT = 'https://www.smtpeter.com/v1';
 
     const HTTP_STATUS_NO_CONTENT = 204;
 
@@ -21,15 +22,23 @@ class Client
     /** @var string */
     protected $apiToken;
 
+    /** @var Templates */
+    public $templates;
+
     public function __construct(string $apiToken)
     {
         $this->httpClient = new HttpClient();
         $this->apiToken = $apiToken;
+
+        $this->initializeEndpoints();
     }
 
+    /**
+     * Initialize endpoints
+     */
     public function initializeEndpoints(): void
     {
-//        $this->shipments = new Shipments($this);
+        $this->templates = new Templates($this);
     }
 
     /**
