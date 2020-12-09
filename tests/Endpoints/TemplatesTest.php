@@ -21,8 +21,6 @@ class TemplatesTest extends TestCase
     {
         $id = 4;
         $template = $this->client->templates->get($id);
-        print_r($template);
-        exit;
         $this->assertInstanceOf(Template::class, $template);
         $this->assertEquals($id, $template->id);
     }
