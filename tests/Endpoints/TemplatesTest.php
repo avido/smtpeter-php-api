@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 class TemplatesTest extends TestCase
 {
-    /** @test */
+    /** @testx */
     public function templates_list()
     {
         $templates = $this->client->templates->list();
@@ -23,5 +23,6 @@ class TemplatesTest extends TestCase
         $template = $this->client->templates->get($id);
         $this->assertInstanceOf(Template::class, $template);
         $this->assertEquals($id, $template->id);
+        $this->assertIsArray($template->getVariables());
     }
 }
