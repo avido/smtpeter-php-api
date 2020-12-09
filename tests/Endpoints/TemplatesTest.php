@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 
 class TemplatesTest extends TestCase
 {
-
     /** @test */
     public function templates_list()
     {

@@ -48,6 +48,22 @@ class Templates extends BaseEndpoint
     }
 
     /**
+     * Not yet implemented
+     * @todo implement
+     */
+    public function create()
+    {
+    }
+
+    /**
+     * Not yet implemented
+     * @todo implement
+     */
+    public function update()
+    {
+    }
+
+    /**
      * Limit templates list results
      * @param int $start
      * @param int|null $limit
