@@ -1,13 +1,14 @@
 <?php
 namespace Avido\Smtpeter;
 
-use Avido\Smtpeter\Endpoints\Templates;
 use Avido\Smtpeter\Exceptions\SmtpeterException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
 // endpoints
+use Avido\Smtpeter\Endpoints\Templates;
+use Avido\Smtpeter\Endpoints\Email;
 use Psr\Http\Message\ResponseInterface;
 
 class Client
@@ -25,6 +26,9 @@ class Client
     /** @var Templates */
     public $templates;
 
+    /** @var Email */
+    public $email;
+
     public function __construct(string $apiToken)
     {
         $this->httpClient = new HttpClient();
@@ -39,6 +43,7 @@ class Client
     public function initializeEndpoints(): void
     {
         $this->templates = new Templates($this);
+        $this->email = new Email($this);
     }
 
     /**
