@@ -15,7 +15,7 @@ class ClientTest extends TestCase
     public function performing_an_http_call_without_setting_an_api_token_throws_an_exception()
     {
         $this->expectException(SmtpeterException::class);
-        $this->client->setApiToken(null);
+        $this->client->setApiToken('');
         $this->client->performHttpCall('GET', 'some-resource');
     }
 }
