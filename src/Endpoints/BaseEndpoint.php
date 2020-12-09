@@ -46,7 +46,6 @@ abstract class BaseEndpoint
         }
 
         $body = $response->getBody()->getContents();
-
         if (empty($body)) {
             if ($response->getStatusCode() === Client::HTTP_STATUS_NO_CONTENT) {
                 return;
@@ -55,13 +54,15 @@ abstract class BaseEndpoint
             throw new SmtpeterException('No response body found.');
         }
 
-        $object = @json_decode($body);
+        if ($response->getStatusCode() >= 400) {
+            throw new SmtpeterException($body, $response->getStatusCode());
+        }
 
+        $object = @json_decode($body);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new SmtpeterException("Unable to decode smtpeter response: '{$body}'.");
         }
 
-//        if ($response->getStatusCode() >= 400) {
 //            $error = collect(collect($object->errors)->first());
 //
 //            $messageBag = collect('Error executing API call');
