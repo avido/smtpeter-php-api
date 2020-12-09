@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 
 class EmailTest extends TestCase
 {
-    /** @test */
+    /** @test_disabled */
     public function send_template_email()
     {
         $email = new Email([
@@ -24,7 +24,7 @@ class EmailTest extends TestCase
         $this->assertInstanceOf(Recipient::class, $response->first());
     }
 
-    /** @test */
+    /** @test_disabled */
     public function send_simple_email()
     {
         $email = new Email([
@@ -39,7 +39,7 @@ class EmailTest extends TestCase
         $this->assertInstanceOf(Recipient::class, $response->first());
     }
 
-    /** @test */
+    /** @test_disabled */
     public function can_not_send_invalid_sender_domain()
     {
         $this->expectException(SmtpeterException::class);
