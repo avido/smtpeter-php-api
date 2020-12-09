@@ -1,7 +1,6 @@
 <?php
 namespace Avido\Smtpeter\Resources;
 
-
 class EmailOptions extends BaseResource
 {
     /** @var boolean */

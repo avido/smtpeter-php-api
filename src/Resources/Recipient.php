@@ -1,7 +1,6 @@
 <?php
 namespace Avido\Smtpeter\Resources;
 
-
 class Recipient extends BaseResource
 {
     /** @var string */

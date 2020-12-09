@@ -5,7 +5,6 @@ use Avido\Smtpeter\Resources\Email as EmailResource;
 use Avido\Smtpeter\Resources\Recipient;
 use Illuminate\Support\Collection;
 
-
 class Email extends BaseEndpoint
 {
     public function send(EmailResource $email)

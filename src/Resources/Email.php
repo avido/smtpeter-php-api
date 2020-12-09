@@ -1,16 +1,21 @@
 <?php
 namespace Avido\Smtpeter\Resources;
 
-
 class Email extends BaseResource
 {
+    /** @var array  */
     public $recipients = [];
+    /** @var string */
     public $from;
+    /** @var string */
     public $subject;
+    /** @var string */
     public $text;
+    /** @var string */
     public $html;
+    /** @var int */
     public $templateId;
-
+    /** @var array */
     public $data = [];
 
     public function setRecipientAttribute($value)
@@ -42,7 +47,7 @@ class Email extends BaseResource
             })
             ->when(count($this->recipients), function ($collection) {
                 $recipients = collect($this->recipients)
-                    ->map(function( $item) {
+                    ->map(function ($item) {
                         return $item->email;
                     })
                     ->all();
