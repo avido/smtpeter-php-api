@@ -44,6 +44,7 @@ class Template extends BaseResource
                     ->all();
             }
         }
+
         return [];
     }
 }
