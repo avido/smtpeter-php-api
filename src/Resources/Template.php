@@ -13,8 +13,13 @@ class Template extends BaseResource
     public $background;
     public $text;
     public $font;
-    public $_internals;
+    public $internals;
     public $from;
     public $subject;
     public $version;
+
+    public function setInternalsAttribute($value)
+    {
+        $this->internals = $value;
+    }
 }
