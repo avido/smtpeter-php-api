@@ -8,6 +8,8 @@ class Email extends BaseResource
     /** @var string */
     public $from;
     /** @var string */
+    public $replyto;
+    /** @var string */
     public $subject;
     /** @var string */
     public $text;
