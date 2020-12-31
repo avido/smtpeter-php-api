@@ -1,5 +1,8 @@
 # Smtpeter PHP Api Client
 
+This release is not production ready yet.. use at own risk!
+
+
 ## Requirements
 To use the smtpeter api client, the following things are required:
 - A [Copernica account](https://www.copernica.com/)
@@ -31,4 +34,14 @@ $templatesWithLimit = $client->templates->list($offset, $limit);
 #### Retrieve specific template
 ```php
 $template = $client->template->get($id);
+```
+
+#### Send out email using template
+```php
+$email = new Email([
+    'templateId' => 1,
+    'recipient' => 'receiver@domain.tld',
+    'data' => ['array' => 'of replacement vars']
+]);
+$client->email->send($email);
 ```
