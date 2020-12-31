@@ -1,6 +1,11 @@
 <?php
 namespace Avido\Smtpeter\Tests\Endpoints;
 
+/**
+ * Email tests are currentl disabled
+ *
+ * @todo add mocking
+ */
 use Avido\Smtpeter\Exceptions\SmtpeterException;
 use Avido\Smtpeter\Resources\Email;
 use Avido\Smtpeter\Resources\Recipient;
@@ -14,9 +19,9 @@ class EmailTest extends TestCase
     public function send_template_email()
     {
         $email = new Email([
-            'from' => 'info@123lens.nl',
-            'templateId' => 4,
-            'recipient' => 'sebastiaan@avido.nl',
+            'from' => 'from@domain.tld',
+            'templateId' => 1,
+            'recipient' => 'recipient@domain.tld',
             'subject' => 'Subject overruled',
         ]);
         $response = $this->client->email->send($email);
@@ -28,8 +33,8 @@ class EmailTest extends TestCase
     public function send_simple_email()
     {
         $email = new Email([
-            'from' => 'info@123lens.nl',
-            'recipient' => 'sebastiaan@avido.nl',
+            'from' => 'from@domain.tld',
+            'recipient' => 'recipient@domain.tld',
             'subject' => 'Subject',
             'html' => '<b>html body</b>',
             'text' => 'email text version'
@@ -46,8 +51,8 @@ class EmailTest extends TestCase
         $this->expectExceptionMessage('You cannot send mailings from some-invalid-domain.nl without configuring it as sender domain');
 
         $email = new Email([
-            'from' => 'info@some-invalid-domain.nl',
-            'recipient' => 'sebastiaan@avido.nl',
+            'from' => 'from@invalid.domain.tld',
+            'recipient' => 'recipient@domain.tld',
             'subject' => 'Subject',
             'html' => '<b>html body</b>',
             'text' => 'email text version'
