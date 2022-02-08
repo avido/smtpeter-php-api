@@ -48,6 +48,6 @@ class Email extends BaseEndpoint
                 ]));
             });
 
-        return $collection;
+        return $collection->first();
     }
 }
