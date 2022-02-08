@@ -15,10 +15,6 @@ You can install the package using composer.
 composer require avido/smtpeter-php-api
 ```
 
-## Known issues
-Currently smtpeter doesn't handle the `$replyto` correctly (doesn't use it at all).
-
-
 
 ## Getting started
 Initialize the Smtpeter php api client and set your API key:
@@ -43,10 +39,26 @@ $template = $client->template->get($id);
 
 #### Send out email using template
 ```php
+// simple email
 $email = new Email([
     'templateId' => 1,
-    'recipient' => 'receiver@domain.tld',
+    'to' => 'receiver@domain.tld',
     'data' => ['array' => 'of replacement vars']
 ]);
+// email with bcc
+$email = new Email([
+    'templateId' => 1,
+    'to' => 'receiver@domain.tld',
+    'bcc' => 'bcc@domain.tld',
+    'data' => ['array' => 'of replacement vars']
+]);
+// email with replyTo address
+$email = new Email([
+    'templateId' => 1,
+    'to' => 'receiver@domain.tld',
+    'replyTo' => 'replyTo@domain.tld',
+    'data' => ['array' => 'of replacement vars']
+]);
+
 $client->email->send($email);
 ```
