@@ -74,11 +74,12 @@ class EmailTest extends TestCase
         $this->client->email->send($email);
     }
 
-    /** @test_disabled  */
+    /** @test  */
     public function can_resend()
     {
         $messageId = 'ayuaaajaugesqri';
-        $this->client->email->resend($messageId);
+        $response = $this->client->email->resend($messageId);
+        $this->assertInstanceOf(Recipient::class, $response);
     }
 
 }
