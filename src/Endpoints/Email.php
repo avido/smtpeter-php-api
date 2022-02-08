@@ -26,4 +26,18 @@ class Email extends BaseEndpoint
 
         return $collection;
     }
+
+    public function resend(string $messageId)
+    {
+        $response = $this->performApiCall(
+            'POST',
+            '/resend',
+            json_encode([
+                'message' => $messageId
+            ])
+        );
+
+        print_r($response);
+        exit;
+    }
 }
