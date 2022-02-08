@@ -14,6 +14,7 @@ class Email extends BaseEndpoint
             '/send',
             json_encode($email->toArray())
         );
+
         $collection = new Collection();
 
         collect($response)
@@ -37,7 +38,16 @@ class Email extends BaseEndpoint
             ])
         );
 
-        print_r($response);
-        exit;
+        $collection = new Collection();
+
+        collect($response)
+            ->each(function ($email, $id) use ($collection) {
+                $collection->push(new Recipient([
+                    'id' => $id,
+                    'email' => $email
+                ]));
+            });
+
+        return $collection;
     }
 }
