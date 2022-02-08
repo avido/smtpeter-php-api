@@ -62,3 +62,9 @@ $email = new Email([
 
 $client->email->send($email);
 ```
+
+#### Resend email
+```php
+$messageId = 'abcdef1234';
+$client->email->resend($messageId   );
+```
