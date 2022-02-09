@@ -37,6 +37,8 @@ $templatesWithLimit = $client->templates->list($offset, $limit);
 $template = $client->template->get($id);
 ```
 
+### Emails
+
 #### Send out email using template
 ```php
 // simple email
@@ -68,3 +70,37 @@ $client->email->send($email);
 $messageId = 'abcdef1234';
 $client->email->resend($messageId   );
 ```
+### Events
+
+#### Get events for specific messageId
+```php
+$messageId = 'abcdef1234';
+$events = $client->events->message($messageId);
+// optional you can filter by date/ tags
+$from = '2022-01-01';
+$end = '2022-01-07';
+$filterd = $client->events->message($messageId, $from, $end);
+print_r($events);
+...
+Illuminate\Support\Collection Object
+(
+    [items:protected] => Array
+        (
+            [0] => Avido\Smtpeter\Resources\Event Object
+             (
+                [id] => abcdef1234
+                [time] => DateTime Object
+                    (
+                        [date] => 2022-02-01 08:36:01.000000
+                        [timezone_type] => 3
+                        [timezone] => UTC
+                    )
+            
+                [recipient] => recipient@domain.tld
+                ...
+             )
+        )
+)
+```
+For more examples see `tests` folder
+
