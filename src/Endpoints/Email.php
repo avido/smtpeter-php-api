@@ -50,4 +50,42 @@ class Email extends BaseEndpoint
 
         return $collection->first();
     }
+
+    public function get(
+        string $messageId,
+        bool $loadHtml = true,
+        bool $loadAttachments = false,
+        bool $loadHeaders = false
+    ) {
+        // data placeholders
+        $htmlBody = null;
+        $attachments = [];
+        $headers = null;
+
+        // collect html body
+        if ($loadHtml) {
+            $htmlBody = $this->performApiCall(
+                'GET',
+                "/html/{$messageId}",
+            );
+        }
+        if ($loadAttachments) {
+            $attachments = $this->performApiCall(
+                'GET',
+                "/attachments/{$messageId}",
+            );
+        }
+        if ($loadHeaders) {
+            $headers = $this->performApiCall(
+                'GET',
+                "/headers/{$messageId}",
+            );
+        }
+
+        return new EmailResource([
+            'html' => $htmlBody,
+            'attachments' => $attachments,
+            'headers' => $headers
+        ]);
+    }
 }
