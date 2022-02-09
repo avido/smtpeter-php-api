@@ -1,6 +1,7 @@
 <?php
 namespace Avido\Smtpeter;
 
+use Avido\Smtpeter\Endpoints\Events;
 use Avido\Smtpeter\Exceptions\SmtpeterException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
@@ -29,9 +30,16 @@ class Client
     /** @var Email */
     public $email;
 
-    public function __construct(string $apiToken)
+    /** @var Events */
+    public $events;
+
+    private $defaultConfig = [
+        'timeout' => 10
+    ];
+
+    public function __construct(string $apiToken, array $config = [])
     {
-        $this->httpClient = new HttpClient();
+        $this->httpClient = new HttpClient(array_merge($this->defaultConfig, $config));
         $this->apiToken = $apiToken;
 
         $this->initializeEndpoints();
@@ -44,6 +52,7 @@ class Client
     {
         $this->templates = new Templates($this);
         $this->email = new Email($this);
+        $this->events = new Events($this);
     }
 
     /**
