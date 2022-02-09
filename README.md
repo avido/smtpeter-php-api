@@ -70,6 +70,19 @@ $client->email->send($email);
 $messageId = 'abcdef1234';
 $client->email->resend($messageId   );
 ```
+
+#### Retrieve email
+```php
+$messageId = 'abcdef1234';
+// by default only the html body is retrieved. 
+$loadHtml = true;
+$loadAttachments = true;
+$loadHeaders = true;
+$client->email->get($messageId, $loadHtml, $loadAttachments, $loadHeaders);
+
+```
+
+
 ### Events
 
 #### Get events for specific messageId

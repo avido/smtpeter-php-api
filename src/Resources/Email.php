@@ -1,18 +1,21 @@
 <?php
 namespace Avido\Smtpeter\Resources;
 
+use Avido\Smtpeter\Support\Str;
+use Illuminate\Support\Collection;
+
 class Email extends BaseResource
 {
-    /** @var array  */
-    public $recipients = [];
-    /** @var array  */
-    public $to = [];
+    /** @var Collection  */
+    public $recipients;
+    /** @var Collection  */
+    public $to;
     /** @var string */
     public $from;
     /** @var string */
     public $replyTo;
-    /** @var array  */
-    public $bcc = [];
+    /** @var Collection  */
+    public $bcc;
     /** @var string */
     public $subject;
     /** @var string */
@@ -21,28 +24,45 @@ class Email extends BaseResource
     public $html;
     /** @var int */
     public $templateId;
+    /** @var Collection */
+    public $attachments;
+    /** @var Collection */
+    public $headers;
     /** @var array */
     public $data = [];
 
+    public function __construct($attributes = [])
+    {
+        $this->recipients = new Collection();
+        $this->to = new Collection();
+        $this->bcc = new Collection();
+        $this->attachments = new Collection();
+        $this->headers = new Collection();
+
+        parent::__construct($attributes);
+    }
+
     private function addRecipient(string $email): void
     {
-        $this->recipients[] = new Recipient(['email' => trim($email)]);
+        $this->recipients->push(new Recipient(['email' => trim($email)]));
     }
 
     public function setRecipientAttribute($value): void
     {
-        if (is_array($value)) {
-            foreach ($value as $recipient) {
-                $this->setRecipientAttribute($recipient);
-            }
-        } else {
-            if ($value instanceof Recipient) {
-                $this->recipients[] = $value;
+        if (!is_null($value)) {
+            if (is_array($value)) {
+                foreach ($value as $recipient) {
+                    $this->setRecipientAttribute($recipient);
+                }
             } else {
-                if (stristr($value, ",")) {
-                    $this->setRecipientAttribute(explode(",", $value));
+                if ($value instanceof Recipient) {
+                    $this->recipients->push($value);
                 } else {
-                    $this->addRecipient(trim($value));
+                    if (stristr($value, ",")) {
+                        $this->setRecipientAttribute(explode(",", $value));
+                    } else {
+                        $this->addRecipient(trim($value));
+                    }
                 }
             }
         }
@@ -56,12 +76,12 @@ class Email extends BaseResource
             }
         } else {
             if ($value instanceof Recipient) {
-                $this->to[] = $value;
+                $this->to->push($value);
             } else {
                 if (stristr($value, ",")) {
                     $this->setToAttribute(explode(",", $value));
                 } else {
-                    $this->to[] = new Recipient(['email' => trim($value)]);
+                    $this->to->push(new Recipient(['email' => trim($value)]));
                     // also add recipient
                     $this->addRecipient(trim($value));
                 }
@@ -86,16 +106,38 @@ class Email extends BaseResource
             }
         } else {
             if ($value instanceof Recipient) {
-                $this->bcc[] = $value;
+                $this->bcc->push($value);
             } else {
                 if (stristr($value, ",")) {
                     $this->setBccAttribute(explode(",", $value));
                 } else {
-                    $this->bcc[] = new Recipient(['email' => trim($value)]);
+                    $this->bcc->push(new Recipient(['email' => trim($value)]));
                     $this->addRecipient(trim($value));
                 }
             }
         }
+    }
+
+    public function setAttachmentsAttribute($value): self
+    {
+        if (is_array($value) && count($value)) {
+            $this->attachments = collect($value);
+        }
+
+        return $this;
+    }
+
+    public function setHeadersAttribute($value): self
+    {
+        if (trim($value) !== '') {
+            $this->headers = collect(Str::httpParseHeaders($value));
+            // get recipient / subject info from headers.
+            $this->subject = $this->headers->get('Subject');
+            $this->setToAttribute($this->headers->get('To'));
+            $this->from = $this->headers->get('From');
+        }
+
+        return $this;
     }
 
     public function toArray(): array
@@ -107,8 +149,8 @@ class Email extends BaseResource
 
                 return $collection;
             })
-            ->when(count($this->recipients), function ($collection) {
-                $recipients = collect($this->recipients)
+            ->when($this->recipients->count(), function ($collection) {
+                $recipients = $this->recipients
                     ->map(function ($item) {
                         return $item->email;
                     })
@@ -118,8 +160,8 @@ class Email extends BaseResource
                     ->put('recipients', $recipients);
             })
             // fallback when only receivers is set
-            ->when(!count($this->to), function ($collection) {
-                $recipients = collect($this->recipients)
+            ->when(!$this->to->count(), function ($collection) {
+                $recipients = $this->recipients
                     ->map(function ($item) {
                         return $item->email;
                     })
@@ -128,8 +170,8 @@ class Email extends BaseResource
                 return $collection
                     ->put('to', $recipients);
             })
-            ->when(count($this->to), function ($collection) {
-                $to = collect($this->to)
+            ->when($this->to->count(), function ($collection) {
+                $to = $this->to
                     ->map(function ($item) {
                         return $item->email;
                     })
@@ -142,8 +184,8 @@ class Email extends BaseResource
                 return $collection
                     ->put('replyTo', $this->replyTo->email);
             })
-            ->when(count($this->bcc), function ($collection) {
-                $recipients = collect($this->bcc)
+            ->when($this->bcc->count(), function ($collection) {
+                $recipients = $this->bcc
                     ->map(function ($item) {
                         return $item->email;
                     })
@@ -152,8 +194,16 @@ class Email extends BaseResource
                 return $collection
                     ->put('bcc', $recipients);
             })
+            ->when($this->attachments->count(), function ($collection) {
+                return $collection->put('attachments', $this->attachments->toArray());
+            })
+            ->when($this->headers->count(), function ($collection) {
+                return $collection->put('headers', $this->headers->toArray());
+            })
             ->reject(function ($value) {
-                return (is_array($value) && !count($value));
+                return (is_array($value) && !count($value))
+                    || ($value instanceof Collection && !$value->count())
+                    || is_null($value);
             })
             ->all();
     }

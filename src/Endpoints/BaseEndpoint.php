@@ -40,8 +40,7 @@ abstract class BaseEndpoint
         array $requestHeaders = []
     ) {
         $response = $this->apiClient->performHttpCall($httpMethod, $apiMethod, $httpBody, $arguments, $requestHeaders);
-
-        if (collect($response->getHeader('Content-Type'))->first() == 'application/pdf') {
+        if (collect($response->getHeader('Content-Type'))->first() !== 'application/json') {
             return $response->getBody()->getContents();
         }
 
