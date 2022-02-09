@@ -15,11 +15,20 @@ use Illuminate\Support\Collection;
 class EmailTest extends TestCase
 {
     /** @test_disabled  */
+    public function get_mail_html()
+    {
+        $messageId = 'messageId';
+        $response = $this->client->email->get($messageId, true, true, true);
+        $this->assertInstanceOf(Email::class, $response);
+        $this->assertInstanceOf(Recipient::class, $response->recipients->first());
+    }
+
+    /** @test_disabled  */
     public function send_template_email()
     {
         $email = new Email([
             'from' => 'from@domain.tld',
-            'templateId' => 8,
+            'templateId' => 1,
             'to' => 'to@domain.tld',
             'subject' => 'Subject overruled',
             'bcc' => 'bcc@domain.tld',
