@@ -40,11 +40,9 @@ abstract class BaseEndpoint
         array $requestHeaders = []
     ) {
         $response = $this->apiClient->performHttpCall($httpMethod, $apiMethod, $httpBody, $arguments, $requestHeaders);
-        if (collect($response->getHeader('Content-Type'))->first() !== 'application/json') {
-            return $response->getBody()->getContents();
-        }
 
         $body = $response->getBody()->getContents();
+
         if (empty($body)) {
             if ($response->getStatusCode() === Client::HTTP_STATUS_NO_CONTENT) {
                 return;
@@ -55,6 +53,10 @@ abstract class BaseEndpoint
 
         if ($response->getStatusCode() >= 400) {
             throw new SmtpeterException($body, $response->getStatusCode());
+        }
+
+        if (collect($response->getHeader('Content-Type'))->first() !== 'application/json') {
+            return $response->getBody()->getContents();
         }
 
         $object = @json_decode($body);
