@@ -1,6 +1,6 @@
 {
     "name": "avido/smtpeter-php-api",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Api client for smtpeter.com",
     "keywords": [
         "smtpeter",
