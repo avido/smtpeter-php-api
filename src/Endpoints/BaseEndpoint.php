@@ -56,32 +56,13 @@ abstract class BaseEndpoint
         }
 
         if (collect($response->getHeader('Content-Type'))->first() !== 'application/json') {
-            return $response->getBody()->getContents();
+            return $body;
         }
 
         $object = @json_decode($body);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new SmtpeterException("Unable to decode smtpeter response: '{$body}'.");
         }
-
-//            $error = collect(collect($object->errors)->first());
-//
-//            $messageBag = collect('Error executing API call');
-//
-//            if ($error->has('code')) {
-//                $messageBag->push('('.$error->get('code').')');
-//            }
-//
-//            if ($error->has('message')) {
-//                $messageBag->push(': '.$error->get('message'));
-//            }
-//
-//            if ($error->has('human')) {
-//                $messageBag->push(': '.collect($error->get('human'))->first());
-//            }
-//
-//            throw new MyParcelException($messageBag->implode(' '), $response->getStatusCode());
-//        }
 
         return $object;
     }
