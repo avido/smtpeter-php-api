@@ -1,12 +1,12 @@
 <?php
 namespace Avido\Smtpeter\Endpoints;
 
+use Avido\Smtpeter\Exceptions\SmtpeterException;
 use Avido\Smtpeter\Resources\Template as TemplateResource;
 use Illuminate\Support\Collection;
 
 class Templates extends BaseEndpoint
 {
-
     /**
      * List all templates
      * @param int $start
@@ -20,6 +20,16 @@ class Templates extends BaseEndpoint
             'GET',
             '/templates' . $this->limit($start, $limit)
         );
+
+        // smtpeter returns wrong response header (text/html instead of application/json)
+        // decode body first
+        // as we don't know when smtpeter will fix this, we'll test for valid object first
+        if (!is_array($response)) {
+            $response = @json_decode($response);
+            if (json_last_error() != JSON_ERROR_NONE) {
+                throw new SmtpeterException("Unable to decode smtpeter response: '{$response}'.");
+            }
+        }
 
         $collection = new Collection();
 
