@@ -1,6 +1,8 @@
 # Changes
 
 ## Pending
+
+## 0.0.6
 - Fixed missing `type` key in event resource
 
 ## 0.0.5
