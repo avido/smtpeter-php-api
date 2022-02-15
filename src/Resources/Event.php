@@ -31,6 +31,14 @@ class Event extends BaseResource
     public $state;
     public $event;
 
+    public function setEventAttribute($value): self
+    {
+        // copy event to type as well
+        $this->type = $this->event = $value;
+
+        return $this;
+    }
+
     public function setHeadersAttribute($value): self
     {
         $this->headers = Str::httpParseHeaders($value);
