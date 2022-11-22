@@ -1,6 +1,8 @@
 # Changes
 
 ## Pending
+
+## 0.0.7
 - Updated illuminate/collections version requirement
 
 ## 0.0.6
