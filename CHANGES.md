@@ -1,6 +1,7 @@
 # Changes
 
 ## Pending
+- Updated illuminate/collections version requirement
 
 ## 0.0.6
 - Fixed missing `type` key in event resource
